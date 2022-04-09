@@ -8,7 +8,7 @@ using ProCart.core;
 
 namespace ProCart.DataAccess.InMemory
 {
-    class ProductRepository
+    public class ProductRepository
     {
         ObjectCache cache = MemoryCache.Default;
         List<Products> products;
