@@ -27,12 +27,12 @@ namespace ProCart.DataAccess.InMemory
             cache["productCategories"] = productCategories;
         }
 
-        public void InsertCategory(ProductCategories p)
+        public void Insert(ProductCategories p)
         {
             productCategories.Add(p);
         }
 
-        public void UpdateCategory(ProductCategories category)
+        public void Update(ProductCategories category)
         {
             ProductCategories ProductCategoriesToUpdate = productCategories.Find(c => c.id == category.id);
             if (ProductCategoriesToUpdate != null)
@@ -41,7 +41,7 @@ namespace ProCart.DataAccess.InMemory
                 throw new Exception("category is not found!");
         }
 
-        public ProductCategories FindCategory(string id)
+        public ProductCategories Find(string id)
         {
             ProductCategories productCategory = productCategories.Find(c => c.id == id);
             if (productCategory != null)
@@ -50,12 +50,12 @@ namespace ProCart.DataAccess.InMemory
                 throw new Exception("product not found!");
         }
 
-        public IQueryable<ProductCategories> GetCategories()
+        public IQueryable<ProductCategories> Collections()
         {
             return productCategories.AsQueryable();
         }
 
-        public void DeleteCategory(string id)
+        public void Delete(string id)
         {
             ProductCategories productCategory = productCategories.Find(c => c.id == id);
             if (productCategory != null)

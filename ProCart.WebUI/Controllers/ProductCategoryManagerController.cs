@@ -10,16 +10,16 @@ namespace ProCart.WebUI.Controllers
 {
     public class ProductCategoryManagerController : Controller
     {
-        ProductCategoryRepository context;
+        InMemoryRepository<ProductCategories> context;
 
         public ProductCategoryManagerController()
         {
-            context = new ProductCategoryRepository();
+            context = new InMemoryRepository<ProductCategories>();
         }
         // GET: ProductCategoryManager
         public ActionResult Index()
         {
-            List<ProductCategories> categories = context.GetCategories().ToList();
+            List<ProductCategories> categories = context.Collections().ToList();
             return View(categories);
         }
 
@@ -32,14 +32,14 @@ namespace ProCart.WebUI.Controllers
         {
             if (!ModelState.IsValid)
                 return View(category);
-            context.InsertCategory(category);
+            context.Insert(category);
             context.Commit();
             return RedirectToAction("Index");
         }
 
         public ActionResult EditCategory(string id)
         {
-            var category = context.FindCategory(id);
+            var category = context.Find(id);
             if (category == null)
                 return HttpNotFound();
             return View(category);
@@ -48,7 +48,7 @@ namespace ProCart.WebUI.Controllers
         [HttpPost]
         public ActionResult EditCategory(ProductCategories category, string id)
         {
-            var categoryInMemory = context.FindCategory(id);
+            var categoryInMemory = context.Find(id);
             if (categoryInMemory == null)
                 return HttpNotFound();
             if (!ModelState.IsValid)
@@ -60,7 +60,7 @@ namespace ProCart.WebUI.Controllers
 
         public ActionResult DeleteCategory(string id)
         {
-            var category = context.FindCategory(id);
+            var category = context.Find(id);
             if (category == null)
                 return HttpNotFound();
             return View(category);
@@ -69,10 +69,10 @@ namespace ProCart.WebUI.Controllers
         [HttpPost]
         public ActionResult DeleteCategory(ProductCategories category,string id)
         {
-            var categoryInMemory = context.FindCategory(id);
+            var categoryInMemory = context.Find(id);
             if (categoryInMemory == null)
                 return HttpNotFound();
-            context.DeleteCategory(id);
+            context.Delete(id);
             return RedirectToAction("Index");
         }
     }

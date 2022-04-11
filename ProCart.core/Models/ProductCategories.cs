@@ -6,13 +6,9 @@ using System.Threading.Tasks;
 
 namespace ProCart.core.Models
 {
-    public class ProductCategories
+    public class ProductCategories:BaseEntity
     {
-        public string id { get; set; }
         public string categories { get; set; }
-        public ProductCategories()
-        {
-            this.id = Guid.NewGuid().ToString();
-        }
+        
     }
 }

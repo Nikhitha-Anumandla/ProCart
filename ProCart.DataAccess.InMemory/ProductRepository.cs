@@ -34,7 +34,7 @@ namespace ProCart.DataAccess.InMemory
 
         public void Update(Products p)
         {
-            Products ProductToUpdate = products.Find(c => c.Id == p.Id);
+            Products ProductToUpdate = products.Find(c => c.id == p.id);
             if (ProductToUpdate != null)
                 ProductToUpdate = p;
             else
@@ -43,21 +43,21 @@ namespace ProCart.DataAccess.InMemory
 
         public Products Find(string id)
         {
-            Products product = products.Find(c => c.Id == id);
+            Products product = products.Find(c => c.id == id);
             if (product != null)
                 return product;
             else
                 throw new Exception("product not found!");
         }
 
-        public IQueryable<Products> GetProduct()
+        public IQueryable<Products> Collections()
         {
             return products.AsQueryable();
         }
 
-        public void DeleteProduct(string id)
+        public void Delete(string id)
         {
-            Products product = products.Find(c => c.Id == id);
+            Products product = products.Find(c => c.id == id);
             if (product != null)
                 products.Remove(product);
             else

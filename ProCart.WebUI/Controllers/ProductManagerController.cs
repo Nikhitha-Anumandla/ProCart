@@ -11,18 +11,18 @@ namespace ProCart.WebUI.Controllers
 {
     public class ProductManagerController : Controller
     {
-        ProductRepository context;
-        ProductCategoryRepository categoryContext;
+        InMemoryRepository<Products> context;
+        InMemoryRepository<ProductCategories> categoryContext;
         public ProductManagerController()
         {
-            context = new ProductRepository();
-            categoryContext = new ProductCategoryRepository();
+            context = new InMemoryRepository<Products>();
+            categoryContext = new InMemoryRepository<ProductCategories>();
         }
         
         // GET: ProductManager
         public ActionResult Index()
         {
-            var product = context.GetProduct().ToList();
+            var product = context.Collections().ToList();
             return View(product);
         }
 
@@ -31,7 +31,7 @@ namespace ProCart.WebUI.Controllers
             var vm = new ProductViewModel
             {
                 product = new Products(),
-                categories = categoryContext.GetCategories()
+                categories = categoryContext.Collections()
             };
             return View(vm);
         }
@@ -53,7 +53,7 @@ namespace ProCart.WebUI.Controllers
             var vm = new ProductViewModel
             {
                 product = product,
-                categories = categoryContext.GetCategories()
+                categories = categoryContext.Collections()
             };
             return View(vm);
         }
@@ -89,7 +89,7 @@ namespace ProCart.WebUI.Controllers
             var product = context.Find(Id);
             if (product == null)
                 return HttpNotFound();
-            context.DeleteProduct(Id);
+            context.Delete(Id);
             context.Commit();
             return RedirectToAction("Index");
         }
