@@ -1,6 +1,7 @@
 using ProCart.core.Constracts;
 using ProCart.core.Models;
 using ProCart.DataAccess.InMemory;
+using ProCart.DataAccess.SQL;
 using System;
 
 using Unity;
@@ -45,8 +46,9 @@ namespace ProCart.WebUI
 
             // TODO: Register your type's mappings here.
             // container.RegisterType<IProductRepository, ProductRepository>();
-            container.RegisterType<IRepository<Products>, InMemoryRepository<Products>>();
-            container.RegisterType<IRepository<ProductCategories>, InMemoryRepository<ProductCategories>>();
+            container.RegisterType<IRepository<Products>, SQLRepository<Products>>();
+            container.RegisterType<IRepository<ProductCategories>, SQLRepository<ProductCategories>>();
+            
         }
     }
 }
