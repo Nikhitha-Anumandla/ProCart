@@ -3,31 +3,37 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
-using ProCart.core;
+using ProCart.core.Models;
 using ProCart.DataAccess.InMemory;
-
+using ProCart.core.ViewModels;
 
 namespace ProCart.WebUI.Controllers
 {
     public class ProductManagerController : Controller
     {
         ProductRepository context;
+        ProductCategoryRepository categoryContext;
         public ProductManagerController()
         {
             context = new ProductRepository();
+            categoryContext = new ProductCategoryRepository();
         }
         
         // GET: ProductManager
         public ActionResult Index()
         {
-            List<Products> products = context.GetProduct().ToList();
-            return View(products);
+            var product = context.GetProduct().ToList();
+            return View(product);
         }
 
         public ActionResult CreateProduct()
         {
-            Products product = new Products();
-            return View(product);
+            var vm = new ProductViewModel
+            {
+                product = new Products(),
+                categories = categoryContext.GetCategories()
+            };
+            return View(vm);
         }
         [HttpPost]
         public ActionResult CreateProduct(Products product)
@@ -44,7 +50,12 @@ namespace ProCart.WebUI.Controllers
             var product = context.Find(id);
             if (product == null)
                 return HttpNotFound();
-            return View(product);
+            var vm = new ProductViewModel
+            {
+                product = product,
+                categories = categoryContext.GetCategories()
+            };
+            return View(vm);
         }
         [HttpPost]
         public ActionResult EditProduct(Products product,string id)

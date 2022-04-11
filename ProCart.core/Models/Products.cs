@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ProCart.core
+namespace ProCart.core.Models
 {
     public class Products
     {

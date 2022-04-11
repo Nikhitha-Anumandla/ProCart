@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Runtime.Caching;
-using ProCart.core;
+using ProCart.core.Models;
 
 namespace ProCart.DataAccess.InMemory
 {
