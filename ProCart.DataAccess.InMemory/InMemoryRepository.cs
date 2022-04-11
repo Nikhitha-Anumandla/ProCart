@@ -1,4 +1,5 @@
-﻿using ProCart.core.Models;
+﻿using ProCart.core.Constracts;
+using ProCart.core.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace ProCart.DataAccess.InMemory
 {
-    public class InMemoryRepository<T> where T:BaseEntity
+    public class InMemoryRepository<T> : IRepository<T> where T : BaseEntity
     {
         ObjectCache cache = MemoryCache.Default;
         List<T> items;
@@ -37,7 +38,7 @@ namespace ProCart.DataAccess.InMemory
         {
             var updateT = items.Find(c => c.id == t.id);
             if (updateT == null)
-                throw new Exception(className+" not found!");
+                throw new Exception(className + " not found!");
             updateT = t;
         }
 
@@ -52,7 +53,7 @@ namespace ProCart.DataAccess.InMemory
         public void Delete(string id)
         {
             var item = items.Find(c => c.id == id);
-            if(item==null)
+            if (item == null)
                 throw new Exception(className + " not found!");
             items.Remove(item);
         }

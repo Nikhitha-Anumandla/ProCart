@@ -6,17 +6,18 @@ using System.Web.Mvc;
 using ProCart.core.Models;
 using ProCart.DataAccess.InMemory;
 using ProCart.core.ViewModels;
+using ProCart.core.Constracts;
 
 namespace ProCart.WebUI.Controllers
 {
     public class ProductManagerController : Controller
     {
-        InMemoryRepository<Products> context;
-        InMemoryRepository<ProductCategories> categoryContext;
-        public ProductManagerController()
+        IRepository<Products> context;
+        IRepository<ProductCategories> categoryContext;
+        public ProductManagerController(IRepository<Products> productContext, IRepository<ProductCategories> productCategoryContext)
         {
-            context = new InMemoryRepository<Products>();
-            categoryContext = new InMemoryRepository<ProductCategories>();
+            context =productContext;
+            categoryContext = productCategoryContext;
         }
         
         // GET: ProductManager

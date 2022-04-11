@@ -1,4 +1,5 @@
-﻿using ProCart.core.Models;
+﻿using ProCart.core.Constracts;
+using ProCart.core.Models;
 using ProCart.DataAccess.InMemory;
 using System;
 using System.Collections.Generic;
@@ -10,11 +11,11 @@ namespace ProCart.WebUI.Controllers
 {
     public class ProductCategoryManagerController : Controller
     {
-        InMemoryRepository<ProductCategories> context;
+        IRepository<ProductCategories> context;
 
-        public ProductCategoryManagerController()
+        public ProductCategoryManagerController(IRepository<ProductCategories> context)
         {
-            context = new InMemoryRepository<ProductCategories>();
+            this.context = context;
         }
         // GET: ProductCategoryManager
         public ActionResult Index()
