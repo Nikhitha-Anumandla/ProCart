@@ -7,6 +7,7 @@ using ProCart.core.Models;
 using ProCart.DataAccess.InMemory;
 using ProCart.core.ViewModels;
 using ProCart.core.Constracts;
+using System.IO;
 
 namespace ProCart.WebUI.Controllers
 {
@@ -37,10 +38,15 @@ namespace ProCart.WebUI.Controllers
             return View(vm);
         }
         [HttpPost]
-        public ActionResult CreateProduct(Products product)
+        public ActionResult CreateProduct(Products product, HttpPostedFileBase file)
         {
             if (!ModelState.IsValid)
                 return View(product);
+            if (file != null)
+            {
+                product.Image = product.id + Path.GetExtension(file.FileName);
+                file.SaveAs(Server.MapPath("//ProductImages//") + product.Image);
+            }
             context.Insert(product);
             context.Commit();
             return RedirectToAction("Index");
@@ -59,17 +65,21 @@ namespace ProCart.WebUI.Controllers
             return View(vm);
         }
         [HttpPost]
-        public ActionResult EditProduct(Products product,string id)
+        public ActionResult EditProduct(Products product,string id,HttpPostedFileBase file)
         {
             Products productToEdit = context.Find(id);
             if (productToEdit == null)
                 return HttpNotFound();
             if (!ModelState.IsValid)
                 return View(product);
+            if (file != null)
+            {
+                productToEdit.Image = product.id + Path.GetExtension(file.FileName);
+                file.SaveAs(Server.MapPath("//ProductImages//") + productToEdit.Image);
+            }
             productToEdit.Name = product.Name;
             productToEdit.Category = product.Category;
             productToEdit.Price = product.Price;
-            productToEdit.Image = product.Image;
             productToEdit.Description = product.Description;
             context.Commit();
             return RedirectToAction("Index");
