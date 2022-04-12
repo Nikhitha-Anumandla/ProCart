@@ -1,5 +1,6 @@
 ﻿using ProCart.core.Constracts;
 using ProCart.core.Models;
+using ProCart.core.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,10 +18,20 @@ namespace ProCart.WebUI.Controllers
             context = productContext;
             categoryContext = productCategoryContext;
         }
-        public ActionResult Index()
+        public ActionResult Index(string category=null)
         {
-            var products = context.Collections().ToList();
-            return View(products);
+            List<Products> product;
+            List<ProductCategories> categories=categoryContext.Collections().ToList();
+            if (category == null)
+                product = context.Collections().ToList();
+            else
+                product = context.Collections().Where(p => p.Category == category).ToList();
+            var vm = new ProductListViewModel()
+            {
+                products = product,
+                productCatgories = categories
+            };
+            return View(vm);
         }
 
         public ActionResult Details(string id)

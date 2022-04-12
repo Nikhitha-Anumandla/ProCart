@@ -1,34 +1,47 @@
-﻿@model IEnumerable<ProCart.core.Models.Products>
+﻿@model ProCart.core.ViewModels.ProductListViewModel
 
 @{
     ViewBag.Title = "Home Page";
 }
-<h2>
+<h1>
     Products
-</h2>
+</h1>
 <hr />
-@foreach(var m in Model)
-{
-    <div class="col-md-4" style="height:450px;padding:10px;margin:10px;border:solid thin white">
-        <div class="col-md-12">
-            <img class="img" style="height:250px" src="~/ProductImages/@m.Image"/>
-        </div>
-        <div class="col-md-12">
-            <strong>@Html.ActionLink(m.Name,"Details",new { id = m.id })</strong>
-        </div>
-        <div class="col-md-12">
-            <h4>
-                @m.Description
-            </h4>
-        </div>
-        <div class="col-md-12">
-            <h4>
-                @m.Price
-            </h4>
-        </div>
-        <div class="col-md-12">
-            <a href="#" class="btn btn-info">Add to basket</a>
-        </div>
+
+<div class="col-md-2">
+    <h4>Filter By Categories</h4>
+    <div class="list-group">
+        @Html.ActionLink("All", "Index", null, new {@class=Request["Category"]==null? "list-group-item active":"list-group-item"})
+        @foreach(var model in Model.productCatgories)
+            {
+                @Html.ActionLink(model.categories, "Index", new {Category=model.categories},new { @class = Request["Category"] == model.categories ? "list-group-item active" : "list-group-item" })
+            }
     </div>
-}
+</div>
+<div class="col-md-10">
+    @foreach (var m in Model.products)
+    {
+        <div class="col-md-4" style="height:450px;padding:10px;margin:10px;border:solid thin white">
+            <div class="col-md-12">
+                <img class="img" style="height:250px" src="~/ProductImages/@m.Image" />
+            </div>
+            <div class="col-md-12">
+                <strong>@Html.ActionLink(m.Name, "Details", new { id = m.id })</strong>
+            </div>
+            <div class="col-md-12">
+                <h4>
+                    @m.Description
+                </h4>
+            </div>
+            <div class="col-md-12">
+                <h4>
+                    @m.Price
+                </h4>
+            </div>
+            <div class="col-md-12">
+                <a href="#" class="btn btn-info">Add to basket</a>
+            </div>
+        </div>
+    }
+</div>
 <div class="col-md-12 clearfix"/>
