@@ -1,4 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using ProCart.core.Constracts;
+using ProCart.core.Models;
+using ProCart.core.ViewModels;
 using ProCart.WebUI;
 using ProCart.WebUI.Controllers;
 using System;
@@ -13,16 +16,16 @@ namespace ProCart.WebUI.Tests.Controllers
     public class HomeControllerTest
     {
         [TestMethod]
-        public void Index()
+        public void IndexPageDoesReturnProducts()
         {
-           /* // Arrange
-            HomeController controller = new HomeController();
+            IRepository<Products> productsContext = new Mocks.MockContext<Products>();
+            IRepository<ProductCategories> productCategoriesContext = new Mocks.MockContext<ProductCategories>();
 
-            // Act
-            ViewResult result = controller.Index() as ViewResult;
-
-            // Assert
-            Assert.IsNotNull(result);*/
+            productsContext.Insert(new Products());
+            HomeController controller = new HomeController(productsContext, productCategoriesContext);
+            var result = controller.Index() as ViewResult;
+            var ViewModel = (ProductListViewModel)result.ViewData.Model;
+            Assert.AreEqual(1, ViewModel.products.Count());
         }
 
 
