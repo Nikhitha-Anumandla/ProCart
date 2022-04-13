@@ -1,7 +1,7 @@
 ﻿using ProCart.core.Models;
 using System.Linq;
 
-namespace ProCart.core.Constracts
+namespace ProCart.core.Contracts
 {
     public interface IRepository<T> where T : BaseEntity
     {

@@ -8,6 +8,8 @@ using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
+using ProCart.core.Contracts;
+using ProCart.core.Models;
 using ProCart.WebUI.Models;
 
 namespace ProCart.WebUI.Controllers
@@ -17,15 +19,13 @@ namespace ProCart.WebUI.Controllers
     {
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
+        private IRepository<Customer> customerRespository;
 
-        public AccountController()
-        {
-        }
+        
 
-        public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager )
+        public AccountController(IRepository<Customer> customerRespository)
         {
-            UserManager = userManager;
-            SignInManager = signInManager;
+            this.customerRespository = customerRespository;
         }
 
         public ApplicationSignInManager SignInManager
@@ -155,6 +155,21 @@ namespace ProCart.WebUI.Controllers
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
+                    //register the customer model
+                    Customer customer = new Customer()
+                    {
+                        City = model.City,
+                        Email = model.Email,
+                        Street = model.Street,
+                        State = model.State,
+                        FirstName = model.FirstName,
+                        LastName = model.LastName,
+                        ZipCode = model.ZipCode,
+                        UserId = user.Id
+                    };
+
+                    customerRespository.Insert(customer);
+                    customerRespository.Commit();
                     await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
                     
                     // For more information on how to enable account confirmation and password reset please visit https://go.microsoft.com/fwlink/?LinkID=320771

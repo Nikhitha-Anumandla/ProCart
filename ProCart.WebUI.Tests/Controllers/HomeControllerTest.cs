@@ -1,5 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using ProCart.core.Constracts;
+using ProCart.core.Contracts;
 using ProCart.core.Models;
 using ProCart.core.ViewModels;
 using ProCart.WebUI;

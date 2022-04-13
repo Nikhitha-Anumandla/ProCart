@@ -6,7 +6,6 @@ using ProCart.DataAccess.SQL;
 using System;
 
 using Unity;
-using ProCart.core.Constracts;
 
 namespace ProCart.WebUI
 {
@@ -53,7 +52,8 @@ namespace ProCart.WebUI
             container.RegisterType<IRepository<Basket>, SQLRepository<Basket>>();
             container.RegisterType<IRepository<BasketItem>, SQLRepository<BasketItem>>();
             container.RegisterType<IBasketService, BasketService>();
-            
+            container.RegisterType<IRepository<Customer>, SQLRepository<Customer>>();
+
         }
     }
 }
