@@ -130,5 +130,12 @@ namespace ProCart.Services
             return vm;
         }
 
+        public void ClearBasket(HttpContextBase httpContext)
+        {
+            Basket basket = GetBasket(httpContext,false);
+            basket.basketItems.Clear();
+            BasketContext.Commit();
+        }
+
     }
 }

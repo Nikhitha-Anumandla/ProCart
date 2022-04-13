@@ -14,5 +14,6 @@ namespace ProCart.core.Contracts
         List<BasketViewModel> GetBasketItems(HttpContextBase httpContext);
         void RemoveBasket(HttpContextBase httpContext, string itemId);
         void AddToBasket(HttpContextBase httpContext, string productId);
+        void ClearBasket(HttpContextBase httpContext);
     }
 }

@@ -1,4 +1,5 @@
 ﻿using ProCart.core.Contracts;
+using ProCart.core.Models;
 using ProCart.core.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -11,10 +12,12 @@ namespace ProCart.WebUI.Controllers
     public class BasketController : Controller
     {
         IBasketService basketSerive;
+        IOrderService orderService;
 
-        public BasketController(IBasketService BasketSerive)
+        public BasketController(IBasketService BasketSerive, IOrderService orderService)
         {
             this.basketSerive = BasketSerive;
+            this.orderService = orderService;
         }
         // GET: Basket
         public ActionResult Index()
@@ -39,6 +42,31 @@ namespace ProCart.WebUI.Controllers
         {
             var basketSumary = basketSerive.GetBasketSummary(this.HttpContext);
             return PartialView(basketSumary);
+        }
+
+        public ActionResult CheckOut()
+        {
+            return View();
+        }
+        [HttpPost]
+        public ActionResult CheckOut(Order order)
+        {
+            var basketItems = basketSerive.GetBasketItems(this.HttpContext);
+            order.OrderStatus = "Order Created";
+
+            //payment process
+
+            order.OrderStatus = "payment processed";
+            orderService.CreateOrder(order, basketItems);
+            basketSerive.ClearBasket(this.HttpContext);
+            return RedirectToAction("ThankYou", new { OrderId = order.id });
+
+        }
+
+        public ActionResult ThankYou(string orderId)
+        {
+            ViewBag.OrderId = orderId;
+            return View();
         }
     }
 }

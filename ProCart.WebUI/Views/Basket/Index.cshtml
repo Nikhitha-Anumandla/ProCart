@@ -53,6 +53,7 @@
         @String.Format(new System.Globalization.CultureInfo("en-IN"), "{0:C}", (from p in Model select p.Price*p.Quantity).Sum())
 
     </td>
+    <td><a href="@Url.Action("CheckOut","Basket")">CheckOut</a></td>
 </tr>    
 
 </table>

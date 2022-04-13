@@ -20,10 +20,12 @@ namespace ProCart.WebUI.Tests.Controllers
             //setup
             IRepository<Basket> BasketContext = new MockContext<Basket>();
             IRepository<Products> products = new MockContext<Products>();
+            IRepository<Order> orders = new MockContext<Order>(); 
 
             var httpContext = new HttpMockContext();
             IBasketService basketService = new BasketService(products, BasketContext);
-            var controller = new BasketController(basketService);
+            IOrderService orderService = new OrderService(orders);
+            var controller = new BasketController(basketService,orderService);
             controller.ControllerContext = new System.Web.Mvc.ControllerContext(httpContext, new System.Web.Routing.RouteData(), controller);
             //Act
             /*basketService.AddToBasket(httpContext, "1");*/
@@ -44,6 +46,7 @@ namespace ProCart.WebUI.Tests.Controllers
         {
             IRepository<Basket> BasketContext = new MockContext<Basket>();
             IRepository<Products> products = new MockContext<Products>();
+            IRepository<Order> orders = new MockContext<Order>();
 
             products.Insert(new Products() { id = "1", Price = 100 });
             products.Insert(new Products() { id = "2", Price = 100 });
@@ -54,8 +57,8 @@ namespace ProCart.WebUI.Tests.Controllers
             BasketContext.Insert(basket);
 
             IBasketService basketService = new BasketService(products,BasketContext);
-
-            var controller = new BasketController(basketService);
+            IOrderService orderService = new OrderService(orders);
+            var controller = new BasketController(basketService,orderService);
             var httpContext = new HttpMockContext();
             httpContext.Request.Cookies.Add(new System.Web.HttpCookie("ProCartBasket") { Value = basket.id });
             controller.ControllerContext = new System.Web.Mvc.ControllerContext(httpContext, new System.Web.Routing.RouteData(), controller);
@@ -65,6 +68,41 @@ namespace ProCart.WebUI.Tests.Controllers
 
             Assert.AreEqual(3, basketSummary.BasketCount);
             Assert.AreEqual(300, basketSummary.BasketTotal);
+        }
+
+        [TestMethod]
+        public void CanCheckOutAndCreateOrder()
+        {
+            IRepository<Order> orders = new MockContext<Order>();
+            IRepository<Products> products = new MockContext<Products>();
+            products.Insert(new Products(){id = "1",Price = 100});
+            products.Insert(new Products(){id = "2",Price = 200});
+
+            IRepository<Basket> baskets = new MockContext<Basket>();
+            Basket basket = new Basket();
+            basket.basketItems.Add(new BasketItem { ProductId = "1", Quantity = 2, BasketId = basket.id });
+            basket.basketItems.Add(new BasketItem { ProductId = "2", Quantity = 1, BasketId = basket.id });
+            baskets.Insert(basket);
+
+            IBasketService basketService = new BasketService(products, baskets);
+            IOrderService orderService = new OrderService(orders);
+            var controller = new BasketController(basketService, orderService);
+            var httpContext = new HttpMockContext();
+            httpContext.Request.Cookies.Add(new System.Web.HttpCookie("ProCartBasket") { 
+                Value=basket.id
+            });
+            controller.ControllerContext = new ControllerContext(httpContext, new System.Web.Routing.RouteData(), controller);
+
+            //act
+            Order order = new Order();
+            controller.CheckOut(order);
+
+            //assert
+            Assert.AreEqual(2, order.OrderItems.Count);
+            Assert.AreEqual(0, basket.basketItems.Count);
+
+            Order orderInRep = orders.Find(order.id);
+            Assert.AreEqual(2, orderInRep.OrderItems.Count);
         }
 
     }
