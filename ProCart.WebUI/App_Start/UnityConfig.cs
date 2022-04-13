@@ -1,10 +1,12 @@
-using ProCart.core.Constracts;
+using ProCart.core.Contracts;
+using ProCart.Services;
 using ProCart.core.Models;
 using ProCart.DataAccess.InMemory;
 using ProCart.DataAccess.SQL;
 using System;
 
 using Unity;
+using ProCart.core.Constracts;
 
 namespace ProCart.WebUI
 {
@@ -48,6 +50,9 @@ namespace ProCart.WebUI
             // container.RegisterType<IProductRepository, ProductRepository>();
             container.RegisterType<IRepository<Products>, SQLRepository<Products>>();
             container.RegisterType<IRepository<ProductCategories>, SQLRepository<ProductCategories>>();
+            container.RegisterType<IRepository<Basket>, SQLRepository<Basket>>();
+            container.RegisterType<IRepository<BasketItem>, SQLRepository<BasketItem>>();
+            container.RegisterType<IBasketService, BasketService>();
             
         }
     }

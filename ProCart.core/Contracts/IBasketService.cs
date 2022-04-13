@@ -8,10 +8,10 @@ using System.Web;
 
 namespace ProCart.core.Contracts
 {
-    public interface IBasket
+    public interface IBasketService
     {
         BasketSummaryViewModel GetBasketSummary(HttpContextBase httpContext);
-        IEnumerable<BasketViewModel> GetBasketItems(HttpContextBase httpContext);
+        List<BasketViewModel> GetBasketItems(HttpContextBase httpContext);
         void RemoveBasket(HttpContextBase httpContext, string itemId);
         void AddToBasket(HttpContextBase httpContext, string productId);
     }

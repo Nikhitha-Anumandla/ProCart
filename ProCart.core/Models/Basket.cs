@@ -8,10 +8,10 @@ namespace ProCart.core.Models
 {
     public class Basket:BaseEntity
     {
-        public List<BasketItem> basketItems { get; set; }
+        public virtual ICollection<BasketItem> basketItems { get; set; }
         public Basket()
         {
-           basketItems = new List<BasketItem>();
+           this.basketItems = new List<BasketItem>();
         }
     }
 }

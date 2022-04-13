@@ -11,7 +11,7 @@ using System.Web;
 
 namespace ProCart.Services
 {
-    class BasketService:IBasket
+    public class BasketService:IBasketService
     {
         IRepository<Products> productContext;
         IRepository<Basket> BasketContext;
@@ -19,7 +19,7 @@ namespace ProCart.Services
         public BasketService(IRepository<Products> productContext,IRepository<Basket> BasketContext)
         {
         this.productContext=productContext;
-            this.BasketContext = BasketContext;
+        this.BasketContext = BasketContext;
         }
 
         private Basket GetBasket(HttpContextBase httpContext,bool createIfNull)
@@ -57,7 +57,7 @@ namespace ProCart.Services
             BasketContext.Commit();
             HttpCookie cookie = new HttpCookie(BasketSessionName);
             cookie.Value = basket.id;
-            cookie.Expires = DateTime.Now.AddDays(1);
+            cookie.Expires = DateTime.Now.AddMinutes(1);
             httpContext.Response.Cookies.Add(cookie);
             return basket;
         }
@@ -84,7 +84,7 @@ namespace ProCart.Services
         public void RemoveBasket(HttpContextBase httpContext,string itemId)
         {
             Basket basket = GetBasket(httpContext,true);
-            BasketItem item = basket.basketItems.SingleOrDefault(m => m.ProductId == itemId);
+            BasketItem item = basket.basketItems.FirstOrDefault(m => m.id == itemId);
             if (item != null)
             {
                 basket.basketItems.Remove(item);
@@ -93,9 +93,9 @@ namespace ProCart.Services
 
         }
 
-        public IEnumerable<BasketViewModel> GetBasketItems(HttpContextBase httpContext)
+        public List<BasketViewModel> GetBasketItems(HttpContextBase httpContext)
         {
-            Basket basket = GetBasket(httpContext, true);
+            Basket basket = GetBasket(httpContext, false);
             if (basket != null)
             {
                 var results = (from b in basket.basketItems
@@ -115,7 +115,7 @@ namespace ProCart.Services
 
         public BasketSummaryViewModel GetBasketSummary(HttpContextBase httpContext)
         {
-            Basket basket = GetBasket(httpContext, true);
+            Basket basket = GetBasket(httpContext, false);
             BasketSummaryViewModel vm = new BasketSummaryViewModel(0, 0);
             if (basket != null)
             {
@@ -130,5 +130,6 @@ namespace ProCart.Services
             }
             return vm;
         }
+
     }
 }
