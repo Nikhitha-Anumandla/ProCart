@@ -7,6 +7,7 @@ using ProCart.WebUI.Controllers;
 using ProCart.WebUI.Tests.Mocks;
 using System;
 using System.Linq;
+using System.Security.Principal;
 using System.Web.Mvc;
 
 namespace ProCart.WebUI.Tests.Controllers
@@ -21,11 +22,12 @@ namespace ProCart.WebUI.Tests.Controllers
             IRepository<Basket> BasketContext = new MockContext<Basket>();
             IRepository<Products> products = new MockContext<Products>();
             IRepository<Order> orders = new MockContext<Order>(); 
+            IRepository<Customer> customers = new MockContext<Customer>(); 
 
             var httpContext = new HttpMockContext();
             IBasketService basketService = new BasketService(products, BasketContext);
             IOrderService orderService = new OrderService(orders);
-            var controller = new BasketController(basketService,orderService);
+            var controller = new BasketController(basketService,orderService,customers);
             controller.ControllerContext = new System.Web.Mvc.ControllerContext(httpContext, new System.Web.Routing.RouteData(), controller);
             //Act
             /*basketService.AddToBasket(httpContext, "1");*/
@@ -47,6 +49,7 @@ namespace ProCart.WebUI.Tests.Controllers
             IRepository<Basket> BasketContext = new MockContext<Basket>();
             IRepository<Products> products = new MockContext<Products>();
             IRepository<Order> orders = new MockContext<Order>();
+            IRepository<Customer> customers = new MockContext<Customer>();
 
             products.Insert(new Products() { id = "1", Price = 100 });
             products.Insert(new Products() { id = "2", Price = 100 });
@@ -58,7 +61,7 @@ namespace ProCart.WebUI.Tests.Controllers
 
             IBasketService basketService = new BasketService(products,BasketContext);
             IOrderService orderService = new OrderService(orders);
-            var controller = new BasketController(basketService,orderService);
+            var controller = new BasketController(basketService,orderService,customers);
             var httpContext = new HttpMockContext();
             httpContext.Request.Cookies.Add(new System.Web.HttpCookie("ProCartBasket") { Value = basket.id });
             controller.ControllerContext = new System.Web.Mvc.ControllerContext(httpContext, new System.Web.Routing.RouteData(), controller);
@@ -75,6 +78,7 @@ namespace ProCart.WebUI.Tests.Controllers
         {
             IRepository<Order> orders = new MockContext<Order>();
             IRepository<Products> products = new MockContext<Products>();
+            IRepository<Customer> customers = new MockContext<Customer>();
             products.Insert(new Products(){id = "1",Price = 100});
             products.Insert(new Products(){id = "2",Price = 200});
 
@@ -86,8 +90,13 @@ namespace ProCart.WebUI.Tests.Controllers
 
             IBasketService basketService = new BasketService(products, baskets);
             IOrderService orderService = new OrderService(orders);
-            var controller = new BasketController(basketService, orderService);
+
+            customers.Insert(new Customer() { id = "1", Email = "nikhithaanumandla@gmail.com", ZipCode = "505326" });
+
+            IPrincipal FakeUser = new GenericPrincipal(new GenericIdentity("nikhithaanumandla@gmail.com", "Forms"), null);
+            var controller = new BasketController(basketService, orderService,customers);
             var httpContext = new HttpMockContext();
+            httpContext.User = FakeUser;
             httpContext.Request.Cookies.Add(new System.Web.HttpCookie("ProCartBasket") { 
                 Value=basket.id
             });
