@@ -9,6 +9,7 @@ using System.Web.Mvc;
 
 namespace ProCart.WebUI.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class ProductCategoryManagerController : Controller
     {
         IRepository<ProductCategories> context;

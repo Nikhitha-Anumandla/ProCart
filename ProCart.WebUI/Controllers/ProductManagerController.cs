@@ -11,6 +11,7 @@ using System.IO;
 
 namespace ProCart.WebUI.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class ProductManagerController : Controller
     {
         IRepository<Products> context;
