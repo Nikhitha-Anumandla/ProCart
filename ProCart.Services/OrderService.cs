@@ -34,5 +34,22 @@ namespace ProCart.Services
             OrderContext.Insert(baseOrder);
             OrderContext.Commit();
         }
+
+        public List<Order> GetOrders()
+        {
+            return OrderContext.Collections().ToList();
+        }
+
+        public Order GetOrder(string id)
+        {
+            return OrderContext.Find(id);
+        }
+
+        public void UpdateOrder(Order orderToUpdate)
+        {
+            OrderContext.Update(orderToUpdate);
+            OrderContext.Commit();
+        }
+
     }
 }

@@ -11,5 +11,8 @@ namespace ProCart.core.Contracts
     public interface IOrderService
     {
         void CreateOrder(Order baseOrder, List<BasketViewModel> BasketItems);
+        List<Order> GetOrders();
+        Order GetOrder(string id);
+        void UpdateOrder(Order orderToUpdate);
     }
 }
